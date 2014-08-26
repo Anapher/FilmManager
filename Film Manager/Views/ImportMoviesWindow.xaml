@@ -1,0 +1,132 @@
+﻿<Controls:MetroWindow x:Class="Film_Manager.Views.ImportMoviesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:vm="clr-namespace:Film_Manager.ViewModels"
+        xmlns:ex="clr-namespace:Film_Manager.Extensions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:c="clr-namespace:Film_Manager.Converter"
+        DataContext="{x:Static vm:ImportMoviesViewModel.Instance}"
+        Title="Filme importieren" Height="449" Width="763" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" GlowBrush="LightBlue" ResizeMode="NoResize">
+    <Window.Resources>
+        <c:FalseAtNullValue x:Key="FalseAtNull"/>
+        <c:FalseAtZeroItems x:Key="FalseAtZeroItems"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Allgemein">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Was soll als Filmtitel verwendet werden?"/>
+                    <RadioButton Content="Ordnername" Margin="0,10,0,0" IsChecked="{Binding MovieImport.UseFolderName}"/>
+                    <RadioButton Content="Dateiname" Margin="0,5,0,0" IsChecked="{Binding MovieImport.UseFileName}"/>
+                    <CheckBox Margin="0,20,0,0" Content="Samples ignorieren" IsChecked="{Binding MovieImport.IgnoreSamples}"/>
+                    <CheckBox Margin="0,20,0,0" Content="Bei mehreren Ergebnissen das Erste automatisch auswählen" IsChecked="{Binding MovieImport.UseFirstMovieFirst}"/>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Erweitert">
+                <Grid Margin="10,10,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Content="Namensfilter" Margin="0,0,0,5" x:Name="chkIsEnabled" IsChecked="{Binding MovieImport.UseFilter}"/>
+                    <GroupBox Header="Ersetzte" Grid.Row="1" IsEnabled="{Binding ElementName=chkIsEnabled,Path=IsChecked}">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox IsChecked="{Binding MovieImport.ReplaceUmlauts}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Umlaute"/>
+                                    <TextBlock Text="(ä, ö, ü, ß -> ae, oe, ue, ss)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceCodec}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Audio/Video Codec"/>
+                                    <TextBlock Text="(DIVX, XVID, MPEG, AC3, DTS, ...)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceYear}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Erscheinungsjahr"/>
+                                    <TextBlock Text="(1999, {2001}, (2005), [2012], ...)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceQualitySetting}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Qualitätseinstellungen"/>
+                                    <TextBlock Text="(BLUERAY, BD, 1080p, DVDRIP, DL, MD, Retail, ...)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceGroup}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Release Gruppe"/>
+                                    <TextBlock Text="(-AOE, -CIS, -HDC, -ENCOUNTERS, ...)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceLanguage}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Sprache"/>
+                                    <TextBlock Text="(English, German, ...)" FontStyle="Italic"/>
+                                </StackPanel>
+                            </CheckBox>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Vorschau">
+                <TreeView ItemsSource="{Binding MovieImport.FoundMovies}" x:Name="tv">
+                    <i:Interaction.Behaviors>
+                        <ex:BindableSelectedItemBehavior SelectedItem="{Binding SelectedMovie,Mode=TwoWay}"/>
+                    </i:Interaction.Behaviors>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Movies}">
+                            <TextBlock Text="{Binding}" />
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </GroupBox>
+            <StackPanel Grid.Column="1" Margin="0,0,5,0">
+                <Button Margin="0,10,0,0" Command="{Binding ImportFolder}">
+                    <Button.Content>
+                        <Image Source="/Resources/add.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Margin="0,5,0,0" Command="{Binding RemoveMovie}" IsEnabled="{Binding SelectedMovie,Converter={StaticResource FalseAtNull}}">
+                    <Button.Content>
+                        <Image Source="/Resources/del.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Margin="0,15,0,0" Command="{Binding RemoveAllMovies}" IsEnabled="{Binding MovieImport.FoundMovies.Count,Converter={StaticResource FalseAtZeroItems}}">
+                    <Button.Content>
+                        <Image Source="/Resources/removeall.png"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </Grid>
+        
+        <Separator Grid.Row="1" Grid.ColumnSpan="2"/>
+        <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="5">
+            <Button Content="Abbrechen" DockPanel.Dock="Right" HorizontalAlignment="Right" IsCancel="True"/>
+            <Button Content="Importieren" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,10,0" IsDefault="True" Command="{Binding ImportMovies}" IsEnabled="{Binding MovieImport.FoundMovies.Count,Converter={StaticResource FalseAtZeroItems}}"/>
+        </DockPanel>
+    </Grid>
+</Controls:MetroWindow>
