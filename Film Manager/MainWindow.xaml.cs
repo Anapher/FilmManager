@@ -40,11 +40,5 @@ namespace Film_Manager
             }
             
         }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Website.WebsiteGenerator generator = new Website.WebsiteGenerator();
-            generator.Generate(ViewModels.MainViewModel.Instance.MovieData.Movies, new System.IO.DirectoryInfo(@"D:\Dokumente\Visual Studio 2013\Projects\Film Manager\test"));
-        }
     }
 }

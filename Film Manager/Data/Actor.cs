@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Film_Manager.Data
 {
     [Serializable]
-    class Actor
+   public class Actor
     {
         public string Name { get; set; }
 

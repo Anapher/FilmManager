@@ -13,6 +13,7 @@
         <c:ListOfStringToString x:Key="listtostring"/>
         <c:FSKConverter x:Key="fskconverter"/>
         <c:FalseAtNullValue x:Key="FalseAtNull"/>
+        <c:HiddenAtNullValue x:Key="HiddenAtNullValue"/>
     </Window.Resources>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
@@ -30,18 +31,17 @@
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Datei">
                 <MenuItem Header="Ordner importieren" Command="{Binding AddMovies}"/>
-                <MenuItem Header="Datei importieren"/>
             </MenuItem>
             <MenuItem Header="Bearbeiten">
                 <MenuItem Header="Film bearbeiten"/>
                 <MenuItem Header="Film entfernen" Command="{Binding RemoveSelectedMovie}" InputGestureText="Entf" IsEnabled="{Binding ElementName=lst,Path=SelectedItem,Converter={StaticResource FalseAtNull}}"/>
                 <MenuItem Header="Andere Filminformationen" Command="{Binding LoadFilmInfos}"/>
             </MenuItem>
-            <MenuItem Header="Suche" Click="MenuItem_Click">
+            <MenuItem Header="Suche">
 
             </MenuItem>
             <MenuItem Header="Extras">
-                <MenuItem Header="Statistik"/>
+                <MenuItem Header="Statistik" Command="{Binding OpenStatistic}"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
@@ -67,7 +67,7 @@
             </ListView>
 
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
-            <Grid Grid.Column="2" Margin="5">
+            <Grid Grid.Column="2" Margin="5" Visibility="{Binding SelectedMovie,Converter={StaticResource HiddenAtNullValue}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>

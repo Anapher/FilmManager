@@ -86,12 +86,15 @@
     <Compile Include="Converter\FalseAtNullValue.cs" />
     <Compile Include="Converter\FalseAtZeroItems.cs" />
     <Compile Include="Converter\FSKConverter.cs" />
+    <Compile Include="Converter\HiddenAtNullValue.cs" />
     <Compile Include="Converter\ListOfStringToString.cs" />
+    <Compile Include="Converter\RoundSize.cs" />
     <Compile Include="Data\Actor.cs" />
     <Compile Include="Data\Movie.cs" />
     <Compile Include="Data\MovieData.cs" />
     <Compile Include="Data\MovieHelper.cs" />
     <Compile Include="Data\MovieImport.cs" />
+    <Compile Include="Data\MovieStatistic.cs" />
     <Compile Include="Data\SearchedMovie.cs" />
     <Compile Include="Extensions\BindableSelectedItemBehavior.cs" />
     <Compile Include="Extensions\GridViewSort.cs" />
@@ -109,6 +112,9 @@
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatisticWindow.xaml.cs">
+      <DependentUpon>StatisticWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Website\WebsiteGenerator.cs" />
     <Page Include="MainWindow.xaml">
@@ -135,6 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\StatisticWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -154,7 +164,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

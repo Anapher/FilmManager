@@ -11,7 +11,7 @@ using System.IO;
 namespace Film_Manager.Data
 {
     [Serializable]
-    class Movie : ViewModelBase.PropertyChangedBase
+   public class Movie : ViewModelBase.PropertyChangedBase
     {
 
         public Movie()

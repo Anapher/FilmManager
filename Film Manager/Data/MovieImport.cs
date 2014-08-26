@@ -75,7 +75,7 @@ namespace Film_Manager.Data
         }
 
 
-        private bool usefilter = true;
+        private bool usefilter = false;
         public bool UseFilter
         {
             get { return usefilter; }
@@ -86,79 +86,13 @@ namespace Film_Manager.Data
         }
 
 
-        private bool replaceumlauts = true;
-        public bool ReplaceUmlauts
+        private bool intelligentimport = true;
+        public bool IntelligentImport
         {
-            get { return replaceumlauts = true; }
+            get { return intelligentimport; }
             set
             {
-                SetProperty(value, ref replaceumlauts);
-            }
-        }
-
-
-        private bool replacecodec = true;
-        public bool ReplaceCodec
-        {
-            get { return replacecodec; }
-            set
-            {
-                SetProperty(value, ref replacecodec);
-            }
-        }
-
-
-        private bool replaceyear = true;
-        public bool ReplaceYear
-        {
-            get { return replaceyear; }
-            set
-            {
-                SetProperty(value, ref replaceyear);
-            }
-        }
-
-
-        private bool replacequalitysetting = true;
-        public bool ReplaceQualitySetting
-        {
-            get { return replacequalitysetting; }
-            set
-            {
-                SetProperty(value, ref replacequalitysetting);
-            }
-        }
-
-
-        private bool replacegroup = true;
-        public bool ReplaceGroup
-        {
-            get { return replacegroup; }
-            set
-            {
-                SetProperty(value, ref replacegroup);
-            }
-        }
-
-
-        private bool replacelanguage = true;
-        public bool ReplaceLanguage
-        {
-            get { return replacelanguage; }
-            set
-            {
-                SetProperty(value, ref replacelanguage);
-            }
-        }
-
-
-        private bool usefirstmoviefirst;
-        public bool UseFirstMovieFirst
-        {
-            get { return usefirstmoviefirst; }
-            set
-            {
-                SetProperty(value, ref usefirstmoviefirst);
+                SetProperty(value, ref intelligentimport);
             }
         }
         #endregion
@@ -253,21 +187,12 @@ namespace Film_Manager.Data
                         controller.SetProgress(progress);
                     });
 
-                    MovieHelper helper = new MovieHelper
-                    {
-                        ReplaceUmlauts = this.ReplaceUmlauts,
-                        ReplaceCodec = this.ReplaceCodec,
-                        ReplaceGroup = this.ReplaceGroup,
-                        ReplaceLanguage = this.ReplaceLanguage,
-                        ReplaceQualitySetting = this.ReplaceQualitySetting,
-                        ReplaceYear = this.ReplaceYear,
-                    };
-                    string name = helper.GetName(UseFolderName ? m.BaseDirectory.Name : m.Movies[0].Name);
+                    string name = MovieHelper.GetName(UseFolderName ? m.BaseDirectory.Name : m.Movies[0].Name, UseFilter);
                     int movieid;
 
                     SearchContainer<SearchMovie> results = client.SearchMovie(name);
 
-                    if (results.Results == null || results.Results.Count == 0 || UseFirstMovieFirst || !(results.Results[0].Title.ToUpper() == name.ToUpper() || !(results.Results[0].OriginalTitle.ToUpper() == name.ToUpper()) || (results.Results.Count > 1 && results.Results[1].Title.ToUpper() == name.ToUpper() || results.Results[1].OriginalTitle.ToUpper() == name.ToUpper())))
+                    if (CheckIfAutomaticImport(results, name))
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -371,6 +296,27 @@ namespace Film_Manager.Data
             });
             t.IsBackground = true;
             t.Start();
+        }
+
+        private bool CheckIfAutomaticImport(SearchContainer<SearchMovie> results, string foldername)
+        {
+            if(results.Results == null || results.Results.Count == 0)
+                return false;
+            if(!IntelligentImport)
+                return true;
+
+            if(results.Results[0].Title.ToUpper() == foldername.ToUpper() || results.Results[0].OriginalTitle.ToUpper() == foldername.ToUpper()){
+                if(results.Results.Count > 1){
+                    foreach(SearchMovie movie in results.Results){
+                       if(movie.Title.ToUpper() == foldername.ToUpper() || movie.OriginalTitle.ToUpper() == foldername.ToUpper()){
+                           return false;
+                       }
+                    }
+                }
+                return true;
+            }
+
+            return false;
         }
     }
 

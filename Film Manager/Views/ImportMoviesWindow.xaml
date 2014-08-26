@@ -22,66 +22,24 @@
             <RowDefinition Height="5"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TabControl>
-            <TabItem Header="Allgemein">
-                <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Was soll als Filmtitel verwendet werden?"/>
-                    <RadioButton Content="Ordnername" Margin="0,10,0,0" IsChecked="{Binding MovieImport.UseFolderName}"/>
-                    <RadioButton Content="Dateiname" Margin="0,5,0,0" IsChecked="{Binding MovieImport.UseFileName}"/>
-                    <CheckBox Margin="0,20,0,0" Content="Samples ignorieren" IsChecked="{Binding MovieImport.IgnoreSamples}"/>
-                    <CheckBox Margin="0,20,0,0" Content="Bei mehreren Ergebnissen das Erste automatisch auswählen" IsChecked="{Binding MovieImport.UseFirstMovieFirst}"/>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Erweitert">
-                <Grid Margin="10,10,10,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <CheckBox Content="Namensfilter" Margin="0,0,0,5" x:Name="chkIsEnabled" IsChecked="{Binding MovieImport.UseFilter}"/>
-                    <GroupBox Header="Ersetzte" Grid.Row="1" IsEnabled="{Binding ElementName=chkIsEnabled,Path=IsChecked}">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox IsChecked="{Binding MovieImport.ReplaceUmlauts}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Umlaute"/>
-                                    <TextBlock Text="(ä, ö, ü, ß -> ae, oe, ue, ss)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceCodec}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Audio/Video Codec"/>
-                                    <TextBlock Text="(DIVX, XVID, MPEG, AC3, DTS, ...)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceYear}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Erscheinungsjahr"/>
-                                    <TextBlock Text="(1999, {2001}, (2005), [2012], ...)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceQualitySetting}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Qualitätseinstellungen"/>
-                                    <TextBlock Text="(BLUERAY, BD, 1080p, DVDRIP, DL, MD, Retail, ...)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceGroup}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Release Gruppe"/>
-                                    <TextBlock Text="(-AOE, -CIS, -HDC, -ENCOUNTERS, ...)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                            <CheckBox Margin="0,10,0,0" IsChecked="{Binding MovieImport.ReplaceLanguage}">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Sprache"/>
-                                    <TextBlock Text="(English, German, ...)" FontStyle="Italic"/>
-                                </StackPanel>
-                            </CheckBox>
-                        </StackPanel>
-                    </GroupBox>
-                </Grid>
-            </TabItem>
-        </TabControl>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <TextBlock Text="Was soll als Filmtitel verwendet werden?"/>
+            <RadioButton Content="Ordnername" Margin="0,10,0,0" IsChecked="{Binding MovieImport.UseFolderName}"/>
+            <RadioButton Content="Dateiname" Margin="0,5,0,0" IsChecked="{Binding MovieImport.UseFileName}"/>
+            <CheckBox Margin="0,20,0,0" Content="Samples ignorieren" IsChecked="{Binding MovieImport.IgnoreSamples}"/>
+            <CheckBox Margin="0,20,0,0" Content="Namensfilter" IsChecked="{Binding MovieImport.UseFilter}" ToolTip="Entfernt Punkte, das Erscheinungsjahr, den Audio/Video Codec, Qualitätseinstellungen, Sprache und alles überflüssige"/>
+            <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                <TextBlock Text="Importoption:"/>
+                <RadioButton Content="Intelligentes Importieren" IsChecked="{Binding MovieImport.IntelligentImport}" Margin="0,10,0,0">
+                    <RadioButton.ToolTip>
+                        <ToolTip>
+                            Wenn der erste gefundene Film als einziger als deutscher- oder Originaltitel genauso heißt wie der Ordner/die Datei wird dieser genommen. Anderenfalls wird gefragt.
+                        </ToolTip>
+                    </RadioButton.ToolTip>
+                </RadioButton>
+                <RadioButton Content="Immer fragen" Margin="0,5,0,0"/>
+            </StackPanel>
+        </StackPanel>
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

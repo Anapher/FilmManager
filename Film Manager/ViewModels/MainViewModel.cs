@@ -138,14 +138,14 @@ namespace Film_Manager.ViewModels
             {
                 if (loadfilminfos == null)
 
-                    loadfilminfos = new RelayCommand((object parameter) => {
+                    loadfilminfos = new RelayCommand((object parameter) =>
+                    {
                         if (SelectedMovie == null) { return; }
                         TMDbClient client = new TMDbClient("c95eb0cc8533fa0f989fec4c8fc563ce");
                         client.DefaultLanguage = "de";
                         string name = new DirectoryInfo(SelectedMovie.BaseDirectory).Name;
                         SearchContainer<SearchMovie> results = client.SearchMovie(name);
-                        Views.SelectMovieWindow selectmoviewindow = new Views.SelectMovieWindow();
-                        selectmoviewindow.Owner = BaseWindow;
+                        Views.SelectMovieWindow selectmoviewindow = new Views.SelectMovieWindow() { Owner = BaseWindow};
                         ViewModels.SelectMovieViewModel.Instance.UpdateList(results);
                         ViewModels.SelectMovieViewModel.Instance.SearchText = name;
                         if (results.Results.Count > 0) { ViewModels.SelectMovieViewModel.Instance.SetSelection(results.Results[0]); }
@@ -160,6 +160,21 @@ namespace Film_Manager.ViewModels
                         }
                     });
                 return loadfilminfos;
+            }
+        }
+
+        private RelayCommand openstatistic;
+        public RelayCommand OpenStatistic
+        {
+            get
+            {
+                if (openstatistic == null)
+                    openstatistic = new RelayCommand((object parameter) =>
+                    {
+                        Views.StatisticWindow window = new Views.StatisticWindow(MovieData.Movies) { Owner = BaseWindow };
+                        window.ShowDialog();
+                    });
+                return openstatistic;
             }
         }
 
