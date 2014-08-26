@@ -1,7 +1,7 @@
 Film Manager
 ===========
 
-Ein tolles Programm um seine Filmsammlung zu verwalten.
+Ein tolles Programm, um seine Filmsammlung zu verwalten.
 
 ![](http://s14.directupload.net/images/140826/cf82wzmu.png)
 
