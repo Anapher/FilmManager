@@ -192,7 +192,7 @@ namespace Film_Manager.Data
 
                     SearchContainer<SearchMovie> results = client.SearchMovie(name);
 
-                    if (CheckIfAutomaticImport(results, name))
+                    if (!CheckIfAutomaticImport(results, name))
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -298,19 +298,23 @@ namespace Film_Manager.Data
             t.Start();
         }
 
+        //If false then ask
         private bool CheckIfAutomaticImport(SearchContainer<SearchMovie> results, string foldername)
         {
-            if(results.Results == null || results.Results.Count == 0)
+            if(results.Results == null || results.Results.Count == 0) //If Nothing is found, the user have to search
                 return false;
             if(!IntelligentImport)
                 return true;
 
-            if(results.Results[0].Title.ToUpper() == foldername.ToUpper() || results.Results[0].OriginalTitle.ToUpper() == foldername.ToUpper()){
+            if(results.Results[0].Title.ToUpper().Replace(" - ","") == foldername.ToUpper().Replace(" - ","") || results.Results[0].OriginalTitle.ToUpper().Replace(" - ","") == foldername.ToUpper().Replace(" - ","")){ //If the first result has the same title
                 if(results.Results.Count > 1){
-                    foreach(SearchMovie movie in results.Results){
-                       if(movie.Title.ToUpper() == foldername.ToUpper() || movie.OriginalTitle.ToUpper() == foldername.ToUpper()){
-                           return false;
-                       }
+                    for (int i = 1; i < results.Results.Count; i++)
+                    {
+                        SearchMovie movie = results.Results[i];
+                        if (movie.Title.ToUpper().Replace(" - ", "") == foldername.ToUpper().Replace(" - ", "") || movie.OriginalTitle.ToUpper().Replace(" - ", "") == foldername.ToUpper().Replace(" - ", ""))
+                        {
+                            return false;
+                        }
                     }
                 }
                 return true;
